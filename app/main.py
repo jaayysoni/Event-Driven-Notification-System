@@ -1,5 +1,5 @@
-from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI # type: ignore
+from fastapi.responses import HTMLResponse# type: ignore
 from app.routes import welcome
 
 app = FastAPI(title="Event-Driven Notification System")
