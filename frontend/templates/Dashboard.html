@@ -7,96 +7,41 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <style>
-    /* Continuous confetti animation */
-    @keyframes confetti {
-      0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-    }
-    .confetti-piece {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background: var(--color);
-      animation: confetti 6s linear infinite;
-    }
-
-    /* Floating icons */
-    @keyframes float {
-      0%,100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
+    /* Confetti, float, glow, toast, panel styles remain same */
+    @keyframes confetti {0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }}
+    .confetti-piece {position: absolute; width: 10px; height: 10px; background: var(--color); animation: confetti 6s linear infinite;}
+    @keyframes float {0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     .float { animation: float 3s ease-in-out infinite; }
-
-    /* Glow effect */
-    @keyframes glow {
-      0%,100% { box-shadow: 0 0 10px rgba(56,189,248,0.6); }
-      50% { box-shadow: 0 0 40px rgba(56,189,248,1); }
-    }
+    @keyframes glow {0%,100% { box-shadow: 0 0 10px rgba(56,189,248,0.6); } 50% { box-shadow: 0 0 40px rgba(56,189,248,1); } }
     .glow { animation: glow 1.5s ease-in-out 5; }
-
-    /* Toast popup */
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #38bdf8;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-weight: 600;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.5s ease;
-      z-index: 100;
-    }
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Notification panel */
-    .notification-panel {
-      position: fixed;
-      top: -100%;
-      left: 0;
-      right: 0;
-      height: 40%;
-      background: white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      border-bottom-left-radius: 1rem;
-      border-bottom-right-radius: 1rem;
-      transition: top 0.5s ease;
-      overflow-y: auto;
-      z-index: 50;
-    }
-    .notification-panel.active {
-      top: 0;
-    }
+    .toast {position: fixed; bottom: 20px; right: 20px; background: #38bdf8; color: white; padding: 12px 20px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.2); opacity: 0; transform: translateY(20px); transition: all 0.5s ease; z-index: 100;}
+    .toast.show {opacity: 1; transform: translateY(0);}
+    .notification-panel {position: fixed; top: -100%; left: 0; right: 0; height: 40%; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem; transition: top 0.5s ease; overflow-y: auto; z-index: 50;}
+    .notification-panel.active {top: 0;}
   </style>
 </head>
 <body class="h-screen bg-gradient-to-br from-sky-200 via-sky-100 to-gray-100 flex items-center justify-center overflow-hidden relative">
 
-  <!-- Continuous Confetti -->
   <div id="confetti-container"></div>
 
   <!-- Dashboard Card -->
   <div id="dashboardCard" class="bg-white rounded-2xl shadow-xl w-full max-w-3xl p-10 text-center relative z-10">
     <h1 class="text-4xl font-bold text-sky-600">🎉 Dashboard 🎉</h1>
-    <p class="mt-4 text-gray-600">Welcome to your Event-Driven Notification System!</p>
+    <p class="mt-4 text-gray-600">Welcome, {{ user.name }}!</p>
 
-    <!-- Animated Icons -->
     <div class="flex justify-center space-x-10 mt-10 text-5xl text-sky-400">
       <i class="fas fa-bell float hover:text-sky-600 transition"></i>
       <i class="fas fa-envelope float hover:text-sky-600 transition"></i>
       <i class="fas fa-comments float hover:text-sky-600 transition"></i>
     </div>
 
-    <!-- Single Button -->
     <div class="mt-12">
       <button id="showNotifications" class="px-6 py-3 bg-sky-600 text-white rounded-lg font-semibold hover:bg-sky-700 transition transform hover:scale-105">
         Show User Info
       </button>
+      <a href="/logout" class="ml-4 px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition transform hover:scale-105">
+        Logout
+      </a>
     </div>
   </div>
 
@@ -107,11 +52,11 @@
       <div class="space-y-4">
         <div class="p-4 bg-sky-50 rounded-lg shadow">
           <p class="font-semibold text-gray-700">Name:</p>
-          <p id="userName" class="text-gray-600">Jay Developer</p>
+          <p class="text-gray-600">{{ user.name }}</p>
         </div>
         <div class="p-4 bg-sky-50 rounded-lg shadow">
           <p class="font-semibold text-gray-700">Email:</p>
-          <p id="userEmail" class="text-gray-600">jay.dev@example.com</p>
+          <p class="text-gray-600">{{ user.email }}</p>
         </div>
       </div>
       <button id="closeNotifications" class="mt-6 px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition">
@@ -120,13 +65,12 @@
     </div>
   </div>
 
-  <!-- Toast -->
   <div id="toast" class="toast">🎉 Notifications celebrated!</div>
 
   <script>
-    // Continuous confetti always running
     const confettiContainer = document.getElementById('confetti-container');
     const colors = ['#f87171','#facc15','#34d399','#60a5fa','#a78bfa'];
+
     function createConfettiPiece() {
       const piece = document.createElement('div');
       piece.classList.add('confetti-piece');
@@ -137,24 +81,18 @@
       confettiContainer.appendChild(piece);
       setTimeout(() => piece.remove(), 6000);
     }
-    setInterval(createConfettiPiece, 300); // steady stream
+    setInterval(createConfettiPiece, 300);
 
-    // Bombardment celebration
     function bombardment() {
-      for (let i = 0; i < 80; i++) {
-        setTimeout(createConfettiPiece, i * 20); // rapid burst
-      }
-      // Glow effect
+      for (let i = 0; i < 80; i++) setTimeout(createConfettiPiece, i*20);
       const card = document.getElementById('dashboardCard');
       card.classList.add('glow');
       setTimeout(() => card.classList.remove('glow'), 4000);
-      // Toast popup
       const toast = document.getElementById('toast');
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
-    // Notification panel toggle + celebration
     const panel = document.getElementById('notificationPanel');
     document.getElementById('showNotifications').addEventListener('click', () => {
       panel.classList.add('active');
