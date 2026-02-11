@@ -9,10 +9,20 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
   <style>
-    @keyframes float1 {0%{transform:translateY(0);}50%{transform:translateY(-5px);}100%{transform:translateY(0);}}
-    @keyframes float2 {0%{transform:translateY(0);}50%{transform:translateY(-8px);}100%{transform:translateY(0);}}
-    .float1 {animation: float1 4s ease-in-out infinite;}
-    .float2 {animation: float2 5s ease-in-out infinite;}
+    @keyframes float1 {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+      100% { transform: translateY(0); }
+    }
+
+    @keyframes float2 {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0); }
+    }
+
+    .float1 { animation: float1 4s ease-in-out infinite; }
+    .float2 { animation: float2 5s ease-in-out infinite; }
 
     .google-btn {
       background-color: #fff;
@@ -20,6 +30,7 @@
       border: 1px solid #ddd;
       transition: all 0.3s ease;
     }
+
     .google-btn:hover {
       background-color: #f7f7f7;
       box-shadow: 0 6px 16px rgba(0,0,0,0.12);
@@ -38,6 +49,7 @@
       <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center">
         Event-Driven Notifications
       </h2>
+
       <p class="text-center text-base md:text-lg mb-6 px-4">
         Securely manage and deliver notifications using an event-driven architecture.
       </p>
@@ -55,13 +67,15 @@
       <h3 class="text-2xl font-bold text-gray-800 mb-2">
         Welcome 👋
       </h3>
+
       <p class="text-gray-600 mb-8">
         Sign in with Google to continue
       </p>
 
-      <!-- Big Google OAuth Button -->
-      <a href="{{ url_for('oauth2_login') }}"
+      <!-- Google OAuth Button -->
+      <a href="{{ url_for('google_login') }}"
          class="google-btn flex items-center justify-center space-x-4 py-4 px-6 rounded-xl text-lg font-semibold">
+        <i class="fab fa-google text-xl"></i>
         <span>Continue with Google</span>
       </a>
 

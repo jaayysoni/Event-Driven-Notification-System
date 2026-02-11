@@ -34,7 +34,7 @@ templates = Jinja2Templates(directory="frontend/templates")
 # ------------------------
 # Routers
 # ------------------------
-app.include_router(oauth2.router, prefix="/auth")
+app.include_router(oauth2.router)
 
 
 # ------------------------
