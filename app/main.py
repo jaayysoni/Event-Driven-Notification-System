@@ -122,7 +122,40 @@ def get_current_user(request: Request):
         raise HTTPException(status_code=401, detail="Not authenticated")
     return user
 
+# ------------------------
+# Test Publish Endpoint
+# ------------------------
+@app.post("/test-email")
+async def test_email(user: dict = Depends(get_current_user)):
+    try:
+        connection = pika.BlockingConnection(
+            pika.URLParameters(settings.RABBITMQ_URL)
+        )
+        channel = connection.channel()
 
+        channel.queue_declare(queue=QUEUE_NAME, durable=True)
+
+        message = {
+            "email": user["email"],
+            "name": user.get("name", "User")
+        }
+
+        channel.basic_publish(
+            exchange="",
+            routing_key=QUEUE_NAME,
+            body=json.dumps(message),
+            properties=pika.BasicProperties(
+                delivery_mode=2,  # Make message persistent
+            ),
+        )
+
+        connection.close()
+
+        return {"message": "Email event published to queue ✅"}
+
+    except Exception as e:
+        return {"error": str(e)}
+    
 # ------------------------
 # Routes
 # ------------------------
