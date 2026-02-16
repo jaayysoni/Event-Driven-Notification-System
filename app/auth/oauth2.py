@@ -7,6 +7,7 @@ import uuid
 from app.config import settings
 from app.database import get_db
 from app.models import User
+from app.services.rabbitmq import publish_message  # ✅ Added
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 oauth = OAuth()
@@ -36,7 +37,7 @@ async def login(request: Request):
     """
     redirect_uri = settings.GOOGLE_REDIRECT_URI
 
-    # DEBUG (remove later)
+    # DEBUG (optional)
     print(">>> GOOGLE REDIRECT URI BEING SENT:", redirect_uri)
 
     return await oauth.google.authorize_redirect(
@@ -71,12 +72,16 @@ async def callback(request: Request, db: Session = Depends(get_db)):
         if not email or not provider_user_id:
             return RedirectResponse(url="/?error=invalid_user_info")
 
+        # ------------------------
         # Check if user exists
+        # ------------------------
         db_user = (
             db.query(User)
             .filter(User.provider_user_id == provider_user_id)
             .first()
         )
+
+        is_first_login = False
 
         if not db_user:
             db_user = User(
@@ -88,8 +93,26 @@ async def callback(request: Request, db: Session = Depends(get_db)):
             db.add(db_user)
             db.commit()
             db.refresh(db_user)
+            is_first_login = True  # ✅ Mark first login
 
+        # ------------------------
+        # Publish Event to RabbitMQ
+        # ------------------------
+        event_type = "FIRST_LOGIN" if is_first_login else "LOGIN_SUCCESS"
+
+        try:
+            publish_message({
+                "event_type": event_type,
+                "email": db_user.email,
+                "name": db_user.name,
+            })
+        except Exception as mq_error:
+            # Do NOT break login if RabbitMQ fails
+            print("RabbitMQ publish failed:", mq_error)
+
+        # ------------------------
         # Save minimal session data
+        # ------------------------
         request.session["user"] = {
             "id": str(db_user.id),
             "name": db_user.name,
