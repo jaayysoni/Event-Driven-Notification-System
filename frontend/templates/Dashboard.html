@@ -7,17 +7,39 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <style>
-    /* Confetti, float, glow, toast, panel styles remain same */
+    /* Confetti, float, glow, notification panel styles */
     @keyframes confetti {0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }}
     .confetti-piece {position: absolute; width: 10px; height: 10px; background: var(--color); animation: confetti 6s linear infinite;}
     @keyframes float {0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     .float { animation: float 3s ease-in-out infinite; }
     @keyframes glow {0%,100% { box-shadow: 0 0 10px rgba(56,189,248,0.6); } 50% { box-shadow: 0 0 40px rgba(56,189,248,1); } }
     .glow { animation: glow 1.5s ease-in-out 5; }
-    .toast {position: fixed; bottom: 20px; right: 20px; background: #38bdf8; color: white; padding: 12px 20px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.2); opacity: 0; transform: translateY(20px); transition: all 0.5s ease; z-index: 100;}
-    .toast.show {opacity: 1; transform: translateY(0);}
+
+    /* Notification Panel */
     .notification-panel {position: fixed; top: -100%; left: 0; right: 0; height: 40%; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem; transition: top 0.5s ease; overflow-y: auto; z-index: 50;}
     .notification-panel.active {top: 0;}
+
+    /* Centered persistent email notification */
+    #emailNotification {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #22c55e; /* Tailwind green-500 */
+      color: white;
+      padding: 20px 30px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 200;
+    }
+    #emailNotification i {
+      font-size: 24px;
+    }
   </style>
 </head>
 <body class="h-screen bg-gradient-to-br from-sky-200 via-sky-100 to-gray-100 flex items-center justify-center overflow-hidden relative">
@@ -65,7 +87,11 @@
     </div>
   </div>
 
-  <div id="toast" class="toast">🎉 Notifications celebrated!</div>
+  <!-- Centered Persistent Email Notification -->
+  <div id="emailNotification">
+    <i class="fas fa-check-circle"></i>
+    🎉 Email sent to your inbox! Kindly check your spam folder if not found in inbox.
+  </div>
 
   <script>
     const confettiContainer = document.getElementById('confetti-container');
@@ -88,9 +114,6 @@
       const card = document.getElementById('dashboardCard');
       card.classList.add('glow');
       setTimeout(() => card.classList.remove('glow'), 4000);
-      const toast = document.getElementById('toast');
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
     const panel = document.getElementById('notificationPanel');
@@ -100,6 +123,11 @@
     });
     document.getElementById('closeNotifications').addEventListener('click', () => {
       panel.classList.remove('active');
+    });
+
+    // Show confetti on page load
+    window.addEventListener('load', () => {
+      bombardment();
     });
   </script>
 
