@@ -95,8 +95,9 @@ app.add_middleware(
     SessionMiddleware,
     secret_key=settings.SESSION_SECRET_KEY,
     session_cookie="session",
-    max_age=None,
-    https_only=False  # Set True in production
+    max_age=3600,        # 1 hour
+    https_only=False,    # True in production
+    same_site="lax"      # Crucial for OAuth redirects
 )
 
 
