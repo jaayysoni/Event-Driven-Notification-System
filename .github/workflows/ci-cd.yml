@@ -10,7 +10,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      # Add your environment variables here
+      # Required environment variables for tests
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
       GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
@@ -22,19 +22,23 @@ jobs:
       RABBITMQ_URL: ${{ secrets.RABBITMQ_URL }}
 
     steps:
-      - name: Checkout repo
+      # 1. Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      # 2. Set up Python
+      - name: Set up Python 3.13
         uses: actions/setup-python@v4
         with:
           python-version: 3.13
 
+      # 3. Install dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest httpx
 
-      - name: Run tests
+      # 4. Run tests
+      - name: Run Pytest
         run: pytest -v tests/
