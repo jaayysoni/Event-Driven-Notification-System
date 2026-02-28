@@ -5,7 +5,6 @@
 ![Swagger UI](https://img.shields.io/badge/Swagger_UI-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
 ![RabbitMQ](https://img.shields.io/badge/RabbitMQ-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white)
-![Celery](https://img.shields.io/badge/Celery-37814A?style=for-the-badge&logo=celery&logoColor=white)
 ![SendGrid](https://img.shields.io/badge/SendGrid-1A82E2?style=for-the-badge&logo=sendgrid&logoColor=white)
 ![REST API](https://img.shields.io/badge/REST_API-02569B?style=for-the-badge)
 ![API](https://img.shields.io/badge/API-000000?style=for-the-badge)
@@ -150,4 +149,5 @@ This project is licensed under the MIT License.
 You are free to use, modify, and distribute this software in accordance with the license terms.
 
 See the `LICENSE` file for full details.
+
 
